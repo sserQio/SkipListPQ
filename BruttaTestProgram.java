@@ -3,7 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-// Class MyEntry
+// CLASS MyEntry
 class MyEntry {
     private Integer key;
     private String value;
@@ -23,7 +23,7 @@ class MyEntry {
     }
 }
 
-// Class Node
+// CLASS Node
 class Node {
     MyEntry entry;
     Node[] forward;
@@ -34,7 +34,7 @@ class Node {
     }
 }
 
-// Class SkipListPQ
+// CLASS SkipListPQ
 class SkipListPQ {
 
     private int maxLevel;
@@ -123,14 +123,22 @@ class SkipListPQ {
     }
 
     public MyEntry removeMin() {
-        //
+        // Check if the skipList is empty
+        if (head.forward[0] == null) return null;
+        Node min = head.forward[0];
+        for (int i = 0; i < level; i++) min.forward[i] = head.forward[i];
+        entryNumber--;
+        while (min.forward[level] == null && level > 0) level--;
+
+        return min.entry;
     }
 
     public void print() {
         Node n = head.forward[0];
         while (n != null){
-            System.out.println(n.entry.getKey() + " " + n.entry.getValue()); // Manca il numero di livelli per il nodo
-            // Manca avanzamento
+            int lvl_height = n.forward.length; // Size of the vertical list corresponding to the forward entry
+            System.out.println(n.entry.getKey() + " " + n.entry.getValue() + lvl_height); 
+            n = n.forward[0]; // Goes to the next entry
         }
     }
 }
@@ -157,17 +165,19 @@ public class BruttaTestProgram {
                 int operation = Integer.parseInt(line[0]);
 
                 switch (operation) {
-                    case 0:
-			// min 
+                    case 0: // min 
+                        MyEntry min = skipList.min();
+                        System.out.println(min);
                         break;
-                    case 1:
-			// removeMin
+                    case 1: // removeMin
+                        MyEntry rmin = skipList.removeMin();
+                        System.out.println(rmin);
                         break;
-                    case 2:
-			// insert 
+                    case 2: // insert 
+
                         break;
-                    case 3:
-			// print
+                    case 3: // print
+                        skipList.print();
                         break;
                     default:
                         System.out.println("Invalid operation code");
